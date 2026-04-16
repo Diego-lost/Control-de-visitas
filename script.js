@@ -215,12 +215,19 @@ function filtrar() {
 
         tabla.innerHTML = "";
 
+        let activos = 0;
+        let finalizados = 0;
+
         if (filtrados.length === 0) {
             tabla.innerHTML = "<tr><td colspan='9'>Sin resultados</td></tr>";
             return;
         }
 
         filtrados.forEach(v => {
+
+            if (!v.hora_salida) activos++;
+            else finalizados++;
+
             tabla.innerHTML += `
             <tr>
                 <td>${v.nombre}</td>
@@ -231,9 +238,20 @@ function filtrar() {
                 <td>${v.hora_entrada}</td>
                 <td>${v.hora_salida ?? "-"}</td>
                 <td>${v.tiempo ?? "-"}</td>
-                <td>-</td>
+                <td>
+                    ${!v.hora_salida 
+                        ? `<button onclick="registrarSalida(${v.id_visita}, event)">Salida</button>` 
+                        : "✔"}
+                </td>
             </tr>`;
         });
+
+        // ✅ ACTUALIZA LOS CARDS
+        document.getElementById("total").textContent = filtrados.length;
+        document.getElementById("activos").textContent = activos;
+        document.getElementById("finalizados").textContent = finalizados;
+
+        mostrarMensaje("✔ Filtro aplicado");
 
     })
     .catch(error => {

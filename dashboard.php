@@ -18,16 +18,18 @@ if (!isset($_SESSION['usuario'])) {
 
 </head>
 <body>
+
 <div id="mensaje" style="display:none; color: green; font-weight: bold;">
     ✔ Se registró correctamente
 </div>
+
 <!-- SIDEBAR -->
 <div class="sidebar">
     <h2>Control</h2>
     <ul>
-        <li><i class="fa fa-home"></i> Inicio</li>
-        <li><i class="fa fa-file"></i> Registros</li>
-        <li><i class="fa fa-chart-bar"></i> Reportes</li>
+        <li onclick="mostrarSeccion('inicio')"><i class="fa fa-home"></i> Inicio</li>
+        <li onclick="mostrarSeccion('registros')"><i class="fa fa-file"></i> Registros</li>
+        <li onclick="mostrarSeccion('reportes')"><i class="fa fa-chart-bar"></i> Reportes</li>
     </ul>
 </div>
 
@@ -40,59 +42,90 @@ if (!isset($_SESSION['usuario'])) {
         <span>Admin</span>
     </div>
 
-    <!-- CARDS -->
-    <div class="cards">
-        <div class="card purple">Total <span id="total">0</span></div>
-        <div class="card orange">Activos <span id="activos">0</span></div>
-        <div class="card blue">Finalizados <span id="finalizados">0</span></div>
+    <!-- ================= INICIO ================= -->
+    <div id="inicio">
+
+        <!-- CARDS -->
+        <div class="cards">
+            <div class="card purple">Total <span id="total">0</span></div>
+            <div class="card orange">Activos <span id="activos">0</span></div>
+            <div class="card blue">Finalizados <span id="finalizados">0</span></div>
+        </div>
+
+        <!-- FORM -->
+        <div class="formulario">
+            <h3>Registrar Visitante</h3>
+
+            <input type="text" id="nombre" placeholder="Nombre completo">
+            <input type="text" id="dni" placeholder="DNI">
+            <input type="text" id="visitado" placeholder="Persona a visitar">
+            <input type="text" id="despacho" placeholder="Despacho">
+
+            <button onclick="registrarEntrada(event)">Registrar Entrada</button>
+        </div>
+
     </div>
 
-    <!-- FORM -->
-    <div class="formulario">
-        <h3>Registrar Visitante</h3>
+    <!-- ================= REGISTROS ================= -->
+    <div id="registros" style="display:none;">
 
-        <input type="text" id="nombre" placeholder="Nombre completo">
-        <input type="text" id="dni" placeholder="DNI">
-        <input type="text" id="visitado" placeholder="Persona a visitar">
-        <input type="text" id="despacho" placeholder="Despacho">
+        <!-- FILTROS -->
+        <div class="filtros">
+            <input type="date" id="filtroFecha">
+            <input type="text" id="filtroDespacho" placeholder="Filtrar despacho">
+            <button onclick="filtrar()">Filtrar</button>
+            <button onclick="exportarCSV()">Exportar CSV</button>
+        </div>
 
-        <button onclick="registrarEntrada()">Registrar Entrada</button>
+        <!-- TABLA -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>DNI</th>
+                    <th>Visitado</th>
+                    <th>Despacho</th>
+                    <th>Fecha</th>
+                    <th>Entrada</th>
+                    <th>Salida</th>
+                    <th>Tiempo</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody id="tabla"></tbody>
+        </table>
+
     </div>
 
-    <!-- FILTROS -->
-    <div class="filtros">
-        <input type="date" id="filtroFecha">
-        <input type="text" id="filtroDespacho" placeholder="Filtrar despacho">
-        <button onclick="filtrar()">Filtrar</button>
-        <button onclick="exportarCSV()">Exportar CSV</button>
-    </div>
-
-    <!-- TABLA -->
-    <table>
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>DNI</th>
-                <th>Visitado</th>
-                <th>Despacho</th>
-                <th>Fecha</th>
-                <th>Entrada</th>
-                <th>Salida</th>
-                <th>Tiempo</th>
-                <th>Acción</th>
-            </tr>
-        </thead>
-        <tbody id="tabla"></tbody>
-    </table>
-
-    <!-- REPORTES -->
-    <div class="reportes">
-        <button onclick="reportePorDia()">Visitas por día</button>
-        <button onclick="tiempoPromedio()">Tiempo promedio</button>
+    <!-- ================= REPORTES ================= -->
+    <div id="reportes" style="display:none;">
+        <div class="reportes">
+            <button onclick="reportePorDia()">Visitas por día</button>
+            <button onclick="tiempoPromedio()">Tiempo promedio</button>
+        </div>
     </div>
 
 </div>
 
 <script src="script.js"></script>
+
+<script>
+// =======================
+// CAMBIO DE SECCIONES
+// =======================
+function mostrarSeccion(seccion) {
+
+    document.getElementById("inicio").style.display = "none";
+    document.getElementById("registros").style.display = "none";
+    document.getElementById("reportes").style.display = "none";
+
+    document.getElementById(seccion).style.display = "block";
+
+    if (seccion === "registros") {
+        cargarVisitas();
+    }
+}
+</script>
+
 </body>
 </html>
