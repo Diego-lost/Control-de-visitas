@@ -1,19 +1,29 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Sistema de Control de Visitantes</title>
-
+<title>Sistema de Visitantes</title>
 <link rel="stylesheet" href="styles.css">
 
 <!-- ICONOS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 </head>
+
 <body>
-<div id="mensaje" style="display:none; color: green; font-weight: bold;">
-    ✔ Se registró correctamente
+
+<?php if (!isset($_SESSION['usuario'])) { ?>
+
+<!-- LOGIN -->
+<div class="login">
+    <h2>Login</h2>
+    <input id="usuario" placeholder="Usuario">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="login()">Ingresar</button>
 </div>
+
+<?php } else { ?>
+
 <!-- SIDEBAR -->
 <div class="sidebar">
     <h2>Control</h2>
@@ -27,10 +37,16 @@
 <!-- MAIN -->
 <div class="main">
 
-    <!-- TOP -->
+    <!-- TOPBAR -->
     <div class="topbar">
-        <input type="text" id="buscarNombre" placeholder="Buscar visitante...">
-        <span>Admin</span>
+        <input type="text" placeholder="Buscar...">
+        <span><?=$_SESSION['usuario']?></span>
+        <a href="logout.php">Salir</a>
+    </div>
+
+    <!-- MENSAJE -->
+    <div id="mensaje" style="display:none; color:green;">
+        ✔ Se registró correctamente
     </div>
 
     <!-- CARDS -->
@@ -40,14 +56,14 @@
         <div class="card blue">Finalizados <span id="finalizados">0</span></div>
     </div>
 
-    <!-- FORM -->
+    <!-- FORMULARIO -->
     <div class="formulario">
         <h3>Registrar Visitante</h3>
 
-        <input type="text" id="nombre" placeholder="Nombre completo">
-        <input type="text" id="dni" placeholder="DNI">
-        <input type="text" id="visitado" placeholder="Persona a visitar">
-        <input type="text" id="despacho" placeholder="Despacho">
+        <input id="nombre" placeholder="Nombre completo">
+        <input id="dni" placeholder="DNI">
+        <input id="visitado" placeholder="Persona a visitar">
+        <input id="despacho" placeholder="Despacho">
 
         <button onclick="registrarEntrada()">Registrar Entrada</button>
     </div>
@@ -55,7 +71,7 @@
     <!-- FILTROS -->
     <div class="filtros">
         <input type="date" id="filtroFecha">
-        <input type="text" id="filtroDespacho" placeholder="Filtrar despacho">
+        <input type="text" id="filtroDespacho" placeholder="Despacho">
         <button onclick="filtrar()">Filtrar</button>
         <button onclick="exportarCSV()">Exportar CSV</button>
     </div>
@@ -85,6 +101,8 @@
     </div>
 
 </div>
+
+<?php } ?>
 
 <script src="script.js"></script>
 </body>
